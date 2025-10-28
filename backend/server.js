@@ -1,3 +1,4 @@
+// backend/server.js
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -11,13 +12,49 @@ app.use(express.json());
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.log(err));
+  .then(() => console.log('✅ MongoDB Connected'))
+  .catch(err => {
+    console.error('❌ MongoDB Connection Error:', err);
+    process.exit(1);
+  });
 
-// Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/teams', require('./routes/teams'));
-app.use('/api/matches', require('./routes/matches'));
+// Health check route
+app.get('/', (req, res) => {
+  res.json({ message: 'African Nations League API is running!' });
+});
+
+// Routes - Only add if files exist
+try {
+  const authRoutes = require('./routes/auth');
+  app.use('/api/auth', authRoutes);
+  console.log('✅ Auth routes loaded');
+} catch (err) {
+  console.log('⚠️  Auth routes not found');
+}
+
+try {
+  const teamRoutes = require('./routes/teams');
+  app.use('/api/teams', teamRoutes);
+  console.log('✅ Team routes loaded');
+} catch (err) {
+  console.log('⚠️  Team routes not found');
+}
+
+try {
+  const matchRoutes = require('./routes/matches');
+  app.use('/api/matches', matchRoutes);
+  console.log('✅ Match routes loaded');
+} catch (err) {
+  console.log('⚠️  Match routes not found');
+}
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Something went wrong!', error: err.message });
+});
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
