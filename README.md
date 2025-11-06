@@ -6,7 +6,7 @@
 
 ## Project Links
 - Deployed Frontend: https: //african-nations-league.vercel.app/
-- Deployed Backend: [[Your Render URL]](https://african-nations-league.onrender.com)
+- Deployed Backend: (https://african-nations-league.onrender.com)
 
 
 ## System Rationale
