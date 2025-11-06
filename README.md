@@ -1,13 +1,13 @@
 # African Nations League - INF4001N
 
 ## Student Information
-- Student Number: [YOUR NUMBER]
-- Name: [YOUR NAME]
+- Student Number: KMSILY001
+- Name: ILYAAS KAMISH
 
 ## Project Links
-- Deployed Frontend: [Your Vercel URL]
-- Deployed Backend: [Your Render URL]
-- GitHub Repository: [Your GitHub URL]
+- Deployed Frontend: https: //african-nations-league.vercel.app/
+- Deployed Backend: [[Your Render URL]](https://african-nations-league.onrender.com)
+
 
 ## System Rationale
 The African Nations League platform was developed to simulate an African football tournament in a realistic and interactive way. The system addresses the following needs:
