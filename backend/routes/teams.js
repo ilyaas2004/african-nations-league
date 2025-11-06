@@ -2,7 +2,9 @@
 const express = require('express');
 const router = express.Router();
 const Team = require('../models/Team');
+const Match = require('../models/Match');
 const { auth, isAdmin } = require('../middleware/auth');
+
 
 // Helper function to generate random player ratings
 const generatePlayerRatings = (naturalPosition) => {
@@ -177,6 +179,32 @@ router.get('/stats/top-scorers', async (req, res) => {
 
     allPlayers.sort((a, b) => b.goals - a.goals);
     res.json(allPlayers.slice(0, 10)); // Top 10 scorers
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+// 📊 Team Performance Analytics
+router.get('/:id/analytics', async (req, res) => {
+  try {
+    const matches = await Match.find({
+      $or: [{ team1: req.params.id }, { team2: req.params.id }]
+    });
+
+    if (matches.length === 0) {
+      return res.json({ message: 'No matches found for this team.' });
+    }
+
+    const totalPlayed = matches.length;
+    const wins = matches.filter(m => m.winner && m.winner.toString() === req.params.id).length;
+    const losses = matches.filter(m => m.status === 'completed' && m.winner && m.winner.toString() !== req.params.id).length;
+
+    const goalsScored = matches.reduce((sum, match) => {
+      const teamGoals = match.goals.filter(g => g.team === match.team1?.country || g.team === match.team2?.country)
+        .filter(g => g.teamId === req.params.id).length;
+      return sum + teamGoals;
+    }, 0);
+
+    res.json({ totalPlayed, wins, losses, goalsScored });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

@@ -48,6 +48,14 @@ try {
   console.log('⚠️  Match routes not found');
 }
 
+try {
+  const winnerRoutes = require('./routes/winners'); // ✅ PLURAL FIX
+  app.use('/api/winners', winnerRoutes);
+  console.log('✅ Winner routes loaded');
+} catch (err) {
+  console.log('⚠️  Winner routes not found');
+}
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
